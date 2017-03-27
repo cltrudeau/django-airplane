@@ -1,0 +1,3 @@
+Gabriel Gabster wrote a similar project taking a different approach.  Some of
+the internal code is inspired by his:
+    - https://github.com/gabegaster/django-offlinecdn

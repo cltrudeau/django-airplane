@@ -1,0 +1,36 @@
+<!-- {% load airplanetags %} -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Airplane Test</title>
+
+<!--
+  <link rel="stylesheet" 
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+-->
+
+  <link rel="stylesheet" 
+  href="{% airplane 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css' %}">
+
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+        Bootstrap Column 1
+      </div>
+      <div class="col-md-4">
+        Bootstrap Column 2
+      </div>
+      {% if not foo %}
+      <div class="col-md-4">
+        Bootstrap Column 3
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

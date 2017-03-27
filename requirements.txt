@@ -1,0 +1,11 @@
+# These requirements are for running tests and the sample_site, the library 
+# itself only needs a subset, see setup.py for that list
+coverage==4.3.4
+Django==1.10
+django-awl==0.13
+pudb==2017.1.1
+pyflakes==1.5.0
+six==1.10.0
+Sphinx==1.5.3
+tox==2.6.0
+twine==1.8.1
