@@ -78,3 +78,7 @@ Once you have cached all the files you are using, switch ``AIRPLANE_MODE`` to
 of the local cache.
 
 
+Docs
+====
+
+Docs available at: http://django-airplane.readthedocs.io/en/latest/
