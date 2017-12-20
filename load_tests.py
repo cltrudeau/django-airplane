@@ -20,7 +20,6 @@ def get_suite(labels=default_labels):
                 'ENGINE':'django.db.backends.sqlite3',
             }
         },
-        ROOT_URLCONF='airplane.tests.urls',
         MIDDLEWARE_CLASSES = (
             'django.contrib.sessions.middleware.SessionMiddleware',
             'django.middleware.common.CommonMiddleware',

@@ -77,8 +77,15 @@ Once you have cached all the files you are using, switch ``AIRPLANE_MODE`` to
 ``airplane.USE_CACHE``.  All URLs are now re-written to point to the contents
 of the local cache.
 
+Supports
+========
+
+django-airplane has been tested with Python 2.7, 3.5, 3.6 and Django 1.11 and
+2.0.  Older versions of Django should still work but aren't tested against.
 
 Docs
 ====
 
 Docs available at: http://django-airplane.readthedocs.io/en/latest/
+
+Source: https://github.com/cltrudeau/django-airplane

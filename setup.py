@@ -30,13 +30,15 @@ SETUP_ARGS = dict(
     keywords='django,cache,offline,CDN,static',
     test_suite="load_tests.get_suite",
     install_requires=[
-        'Django>=1.9',
+        'Django>=1.11',
         'requests>=2.13',
     ],
     tests_require=[
-        'django-awl>=0.13',
+        'context_temp>=0.10.0',
+        'django-awl>=0.16',
         'mock>=2.0.0',
-        'six>=1.10.0',
+        'six>=1.11.0',
+        'waelstow>=0.10.0',
     ]
 )
 

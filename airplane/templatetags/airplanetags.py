@@ -1,23 +1,13 @@
 # airplane.templatetags.airplanetags.py
-import os
-
 from django import template
 from django.conf import settings
-from django.utils.http import urlquote_plus
-
-import requests
 
 import airplane as package
+from airplane.utils import get_cache_path, convert_url, cache_url
 
 register = template.Library()
 
 # ============================================================================
-
-def _convert_url(url):
-    converted = urlquote_plus(url)
-    converted = converted.replace('%', '')
-    return converted
-
 
 @register.simple_tag
 def airplane(url):
@@ -40,27 +30,11 @@ def airplane(url):
         return url
 
     # convert url to local path
-    filename = _convert_url(url)
-    dirname = getattr(settings, 'AIRPLANE_CACHE', package.CACHE_DIR)
-
-    if os.path.isabs(dirname):
-        dir_path = dirname
-    else:
-        dir_path = os.path.join(getattr(settings, 'BASE_DIR'), dirname)
-
-    file_path = os.path.join(dir_path, filename)
+    filename = convert_url(url)
+    dir_path = get_cache_path()
 
     if conf == package.BUILD_CACHE:
-        # fetch the content for caching
-        if not os.path.exists(dir_path):
-            os.mkdir(dir_path)
-
-        response = requests.get(url, stream=True)
-        if not response.ok:
-            raise IOError('Unable to fetch %s' % url)
-        with open(file_path, 'wb') as stream:
-            for chunk in response.iter_content(chunk_size=128):
-                stream.write(chunk)
+        cache_url(dir_path, filename, url)
 
     # we're caching, return the re-written static URL, need to encode
     return '/static/%s' % filename
