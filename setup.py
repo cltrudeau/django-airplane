@@ -35,10 +35,10 @@ SETUP_ARGS = dict(
     ],
     tests_require=[
         'context_temp>=0.10.0',
-        'django-awl>=0.16',
+        'django-awl>=0.17.1',
         'mock>=2.0.0',
         'six>=1.11.0',
-        'waelstow>=0.10.0',
+        'waelstow>=0.10.1',
     ]
 )
 

@@ -1,3 +1,9 @@
+NEXT
+====
+
+* updated dependancies to working versions
+* changed wheel to build universal
+
 0.2
 ===
 
