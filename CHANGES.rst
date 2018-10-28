@@ -1,7 +1,9 @@
-NEXT
-====
+0.3
+===
 
 * updated dependancies to working versions
+* updated minimum django to secure 2.0.2
+* deprecated python 3.5
 * changed wheel to build universal
 
 0.2
