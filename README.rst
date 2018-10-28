@@ -84,6 +84,7 @@ django-airplane has been tested with:
 
 * Python 2.7, 3.6 and Django 1.11 
 * Python 3.6, 3.7 and Django 2.0.2
+* Python 3.6, 3.7 and Django 2.1.2
 
 Older versions of Django should still work but aren't tested against.
 
