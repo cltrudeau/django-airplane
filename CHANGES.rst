@@ -2,6 +2,8 @@
 ===
 
 * updated dependancies to working versions
+* updated minimum django to secure 2.0.2, added tox testing for 2.1.2
+* deprecated python 3.5
 * changed wheel to build universal
 * upgraded packages in requirements.txt for minimum versions in testing
 * moved minimum version of python3 to 3.6

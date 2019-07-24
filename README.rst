@@ -80,9 +80,11 @@ of the local cache.
 Supports
 ========
 
-django-airplane has been tested with Python 2.7, 3.6, 3.7 against Django
-1.11 and Python 3.6, 3.7 against Django 2.1 and 2.2.  Older versions of Django
-should still work but aren't tested against.
+django-airplane has been tested with:
+
+* Python 2.7, 3.6, 3.7 and Django 1.11 
+* Python 3.6, 3.7 and Django 2.1
+* Python 3.6, 3.7 and Django 2.2
 
 Docs
 ====
