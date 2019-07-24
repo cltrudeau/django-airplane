@@ -20,19 +20,23 @@ def get_suite(labels=default_labels):
                 'ENGINE':'django.db.backends.sqlite3',
             }
         },
-        MIDDLEWARE_CLASSES = (
+        MIDDLEWARE = (
+            'django.middleware.security.SecurityMiddleware',
             'django.contrib.sessions.middleware.SessionMiddleware',
             'django.middleware.common.CommonMiddleware',
             'django.middleware.csrf.CsrfViewMiddleware',
             'django.contrib.auth.middleware.AuthenticationMiddleware',
-            'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+            'django.contrib.messages.middleware.MessageMiddleware',
+            'django.middleware.clickjacking.XFrameOptionsMiddleware',
         ),
         INSTALLED_APPS=(
+            'django.contrib.admin',
             'django.contrib.auth',
             'django.contrib.contenttypes',
             'django.contrib.sessions',
-            'django.contrib.admin',
+            'django.contrib.messages',
             'django.contrib.staticfiles',
+
             'awl',
             'awl.rankedmodel',
             'airplane',

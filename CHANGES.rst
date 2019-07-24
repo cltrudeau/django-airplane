@@ -1,8 +1,11 @@
-NEXT
-====
+0.3
+===
 
 * updated dependancies to working versions
 * changed wheel to build universal
+* upgraded packages in requirements.txt for minimum versions in testing
+* moved minimum version of python3 to 3.6
+* changed tox testing for django 1.11, 2.1, 2.2
 
 0.2
 ===
