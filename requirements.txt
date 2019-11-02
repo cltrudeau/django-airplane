@@ -2,7 +2,7 @@
 # itself only needs a subset, see setup.py for that list
 context-temp==0.10.0
 coverage==4.5.3
-Django==2.2.3
+Django==2.2.4
 django-awl==0.23.2
 mock==3.0.5
 pudb==2019.1
