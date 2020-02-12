@@ -44,8 +44,10 @@ import airplane
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
-    os.path.join(BASE_DIR, airplane.CACHE_DIR),
+#    os.path.join(BASE_DIR, airplane.CACHE_DIR),
+    airplane.cache_path(),
 )
 
 #AIRPLANE_MODE = airplane.BUILD_CACHE
-AIRPLANE_MODE = airplane.USE_CACHE
+#AIRPLANE_MODE = airplane.USE_CACHE
+AIRPLANE_MODE = airplane.AUTO_CACHE

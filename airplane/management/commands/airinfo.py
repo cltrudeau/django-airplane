@@ -18,6 +18,8 @@ class Command(BaseCommand):
             mode = 'USE_CACHE'
         elif conf == airplane.BUILD_CACHE:
             mode = 'BUILD_CACHE'
+        elif conf == airplane.AUTO_CACHE:
+            mode = 'AUTO_CACHE'
         else:
             mode = 'OFF'
 

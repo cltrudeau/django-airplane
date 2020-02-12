@@ -3,7 +3,7 @@ from django import template
 from django.conf import settings
 
 import airplane as package
-from airplane.utils import get_cache_path, convert_url, cache_url
+from airplane.utils import get_cache_path, convert_url, cache_url, cache_exists
 
 register = template.Library()
 
@@ -35,6 +35,9 @@ def airplane(url):
 
     if conf == package.BUILD_CACHE:
         cache_url(dir_path, filename, url)
+    elif conf == package.AUTO_CACHE:
+        if not cache_exists(dir_path, filename):
+            cache_url(dir_path, filename, url)
 
     # we're caching, return the re-written static URL, need to encode
     return '/static/%s' % filename

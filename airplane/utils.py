@@ -36,9 +36,18 @@ def cache_url(dir_path, filename, url):
 
     file_path = os.path.join(dir_path, filename)
 
+    if url.startswith('//'):
+        # schemaless, make an assumption
+        url = 'https:' + url
+
     response = requests.get(url, stream=True)
     if not response.ok:
         raise IOError('Unable to fetch %s' % url)
     with open(file_path, 'wb') as stream:
         for chunk in response.iter_content(chunk_size=128):
             stream.write(chunk)
+
+
+def cache_exists(dir_path, filename):
+    file_path = os.path.join(dir_path, filename)
+    return os.path.exists(file_path)
