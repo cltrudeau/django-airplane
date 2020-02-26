@@ -5,7 +5,7 @@ import requests
 from django.conf import settings
 from django.utils.http import urlquote_plus
 
-import airplane
+from airplane.pathing import get_cache_path
 
 # =============================================================================
 
@@ -14,15 +14,6 @@ url_filename_map = None
 # =============================================================================
 # Filename Mapping Methods
 # =============================================================================
-
-def get_cache_path():
-    path = Path(getattr(settings, 'AIRPLANE_CACHE', airplane.CACHE_DIR))
-
-    if not path.is_absolute():
-        path = Path(getattr(settings, 'BASE_DIR')) / path
-
-    return path.resolve()
-
 
 def read_cache_map():
     ### Reads cache-filename-map from the hard drive and (re-)builds the dict
@@ -39,13 +30,11 @@ def read_cache_map():
 
 def write_cache_map():
     global url_filename_map
-    print('###', url_filename_map)
     if not url_filename_map:
         return
 
     cache_dir = Path(get_cache_path())
     if not cache_dir.exists():
-        print('***', cache_dir)
         cache_dir.mkdir()
 
     cache_map = cache_dir / 'cache_map'

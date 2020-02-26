@@ -6,6 +6,7 @@ Django==3.0.3
 django-awl==0.24.0
 pudb==2019.2
 pyflakes==2.1.1
+requests==2.23
 Sphinx==2.4.1
 sphinx-rtd-theme==0.4.3
 tox==3.14.3

@@ -30,12 +30,12 @@ SETUP_ARGS = dict(
     test_suite="load_tests.get_suite",
     install_requires=[
         'Django>=2.2.10',
-        'requests>=2.13',
+        'requests>=2.23',
     ],
     tests_require=[
-        'context_temp>=0.10.0',
-        'django-awl>=0.17.1',
-        'waelstow>=0.10.1',
+        'context_temp>=0.11.1',
+        'django-awl>=0.24.0',
+        'waelstow>=0.10.2',
     ]
 )
 
