@@ -1,3 +1,12 @@
+1.0
+===
+
+* add AUTO_CACHE feature that fetches if url isn't in the cache
+* added support for schemaless urls
+* removed support for Python 2
+* updated dependancies to recent versions
+
+
 0.3.1
 =====
 

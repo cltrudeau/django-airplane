@@ -21,7 +21,6 @@ SETUP_ARGS = dict(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Topic :: Software Development :: Libraries :: Application Frameworks',
@@ -30,14 +29,12 @@ SETUP_ARGS = dict(
     keywords='django,cache,offline,CDN,static',
     test_suite="load_tests.get_suite",
     install_requires=[
-        'Django>=1.11',
+        'Django>=2.2.10',
         'requests>=2.13',
     ],
     tests_require=[
         'context_temp>=0.10.0',
         'django-awl>=0.17.1',
-        'mock>=2.0.0',
-        'six>=1.11.0',
         'waelstow>=0.10.1',
     ]
 )
