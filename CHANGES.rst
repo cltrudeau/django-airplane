@@ -1,3 +1,9 @@
+1.1
+===
+
+* URL to filename re-writing mechanism was creating files that didn't work on
+Windows, changed how the files are named and stored
+
 1.0
 ===
 

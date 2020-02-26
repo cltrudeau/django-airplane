@@ -3,7 +3,7 @@ from django import template
 from django.conf import settings
 
 import airplane as package
-from airplane.utils import get_cache_path, convert_url, cache_url, cache_exists
+from airplane.utils import cache_url, cached_filename, cache_exists
 
 register = template.Library()
 
@@ -29,15 +29,10 @@ def airplane(url):
         # not in AIRPLANE_MODE, pass through
         return url
 
-    # convert url to local path
-    filename = convert_url(url)
-    dir_path = get_cache_path()
-
-    if conf == package.BUILD_CACHE:
-        cache_url(dir_path, filename, url)
-    elif conf == package.AUTO_CACHE:
-        if not cache_exists(dir_path, filename):
-            cache_url(dir_path, filename, url)
+    # if in building mode, or in auto-mode and we need to build
+    if conf == package.BUILD_CACHE or (conf == package.AUTO_CACHE and \
+            not cache_exists(url)):
+        cache_url(url)
 
     # we're caching, return the re-written static URL, need to encode
-    return '/static/%s' % filename
+    return '/static/%s' % cached_filename(url)

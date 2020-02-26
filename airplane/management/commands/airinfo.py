@@ -1,12 +1,9 @@
 # airinfo command
-from __future__ import print_function
-import os
-
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
 import airplane
-from airplane.utils import get_cache_path, reverse_convert_url
+from airplane.utils import get_cache_path, cache_dict
 
 class Command(BaseCommand):
     help = ('Shows information about the airplane app, including the mode, ',
@@ -28,13 +25,10 @@ class Command(BaseCommand):
         path = get_cache_path()
         print('Cache directory:', path)
 
-        files = []
-        for name in os.listdir(path):
-            files.append(reverse_convert_url(name))
-
         print('Cache contents:')
-        files.sort()
-        for name in files:
-            print('  ', name)
+        d = cache_dict()
+        for url, name in d.items():
+            print('file:', name, 'caches:')
+            print('    ', url)
 
         print()

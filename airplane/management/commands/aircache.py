@@ -1,7 +1,7 @@
 # aircache command
 
 from django.core.management.base import BaseCommand
-from airplane.utils import cache_url, get_cache_path, convert_url
+from airplane.utils import cache_url
 
 class Command(BaseCommand):
     help = 'Caches any URLs passed in as arguments in the airplane cache'
@@ -10,8 +10,5 @@ class Command(BaseCommand):
         parser.add_argument('url', nargs='+', type=str)
 
     def handle(self, *args, **options):
-        dir_path = get_cache_path()
-
         for url in options['url']:
-            filename = convert_url(url)
-            cache_url(dir_path, filename, url)
+            cache_url(url)

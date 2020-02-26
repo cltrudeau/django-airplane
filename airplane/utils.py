@@ -1,40 +1,99 @@
-import os, requests
+from pathlib import Path
+import uuid 
+import requests
 
 from django.conf import settings
-from django.utils.http import urlquote_plus, urlunquote_plus
+from django.utils.http import urlquote_plus
 
 import airplane
 
+# =============================================================================
+
+url_filename_map = None
+
+# =============================================================================
+# Filename Mapping Methods
+# =============================================================================
+
 def get_cache_path():
-    dirname = getattr(settings, 'AIRPLANE_CACHE', airplane.CACHE_DIR)
+    path = Path(getattr(settings, 'AIRPLANE_CACHE', airplane.CACHE_DIR))
 
-    if os.path.isabs(dirname):
-        dir_path = dirname
-    else:
-        dir_path = os.path.join(getattr(settings, 'BASE_DIR'), dirname)
+    if not path.is_absolute():
+        path = Path(getattr(settings, 'BASE_DIR')) / path
 
-    return dir_path
+    return path.resolve()
 
 
-def convert_url(url):
-    c = urlquote_plus(url)
-    c = c.replace('%', '|')
-    return c
+def read_cache_map():
+    ### Reads cache-filename-map from the hard drive and (re-)builds the dict
+    cache_map = Path(get_cache_path()) / 'cache_map'
+
+    global url_filename_map
+    url_filename_map = {}
+    if cache_map.exists():
+        with cache_map.open() as f:
+            for line in f:
+                name, url = line.split(':', 1)
+                url_filename_map[url] = name
 
 
-def reverse_convert_url(name):
-    r = name
-    r = r.replace('|', '%')
-    r = urlunquote_plus(r)
-    return r
+def write_cache_map():
+    global url_filename_map
+    print('###', url_filename_map)
+    if not url_filename_map:
+        return
+
+    cache_dir = Path(get_cache_path())
+    if not cache_dir.exists():
+        print('***', cache_dir)
+        cache_dir.mkdir()
+
+    cache_map = cache_dir / 'cache_map'
+
+    # write name:url pairs to the file
+    output = [f'{name}:{url}' for url,name in url_filename_map.items()]
+    cache_map.write_text('\n'.join(output))
+
+# =============================================================================
+# Cache Handling
+# =============================================================================
+
+def cached_filename(url):
+    """Returns the filename for the cached url"""
+    global url_filename_map
+    read_cache_map()
+
+    try:
+        filename = url_filename_map[url]
+    except KeyError:
+        # nothing in the cache_map file, try the old filename mapping method
+        filename = urlquote_plus(url)
+        filename = filename.replace('%', '|')
+
+    path = Path(get_cache_path()) / filename
+    if path.exists():
+        return filename
+
+    # something has gone wrong, can't find the file
+    raise IOError(f'could not find file *{filename}* for url *{url}*')
 
 
-def cache_url(dir_path, filename, url):
-    # fetch the content for caching
-    if not os.path.exists(dir_path):
-        os.mkdir(dir_path)
+def cache_url(url):
+    read_cache_map()
 
-    file_path = os.path.join(dir_path, filename)
+    # get the filename, or create a new one
+    try:
+        filename = url_filename_map[url]
+    except KeyError:
+        # filename should end in the same thing the URL does so that django's
+        # static serve can guess its mimetype
+        _, dot, ext = url.rpartition('.')
+        filename = str(uuid.uuid4().hex)
+
+        if dot == '.':
+            filename = filename + '.' + ext
+
+        url_filename_map[url] = filename
 
     if url.startswith('//'):
         # schemaless, make an assumption
@@ -43,11 +102,29 @@ def cache_url(dir_path, filename, url):
     response = requests.get(url, stream=True)
     if not response.ok:
         raise IOError('Unable to fetch %s' % url)
-    with open(file_path, 'wb') as stream:
+
+    cache_dir = Path(get_cache_path())
+    if not cache_dir.exists():
+        cache_dir.mkdir()
+
+    content = cache_dir / filename
+    with content.open('wb') as stream:
         for chunk in response.iter_content(chunk_size=128):
             stream.write(chunk)
 
+    write_cache_map()
 
-def cache_exists(dir_path, filename):
-    file_path = os.path.join(dir_path, filename)
-    return os.path.exists(file_path)
+
+def cache_exists(url):
+    try:
+        cached_filename(url)
+    except IOError:
+        return False
+
+    return True
+
+
+def cache_dict():
+    global url_filename_map
+    read_cache_map()
+    return url_filename_map

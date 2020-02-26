@@ -7,15 +7,15 @@ from django.template import Context, Template
 from django.test import TestCase, override_settings
 
 import airplane
-from airplane.utils import convert_url
+from airplane.utils import write_cache_map
 from context_temp import temp_directory
 from waelstow import capture_stdout
 
 # ============================================================================
-# Test Objects
+# Mock Content
 # ============================================================================
 
-class FakeRequests(object):
+class FakeRequests:
     ok = True
     content = [b'pretend content', ]
 
@@ -33,6 +33,13 @@ def fake_bad_get(*args, **kwargs):
     return r
 
 
+class FakeUUID:
+    hex = '1234'
+
+# ============================================================================
+# Tests
+# ============================================================================
+
 class AirplaneTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -40,9 +47,9 @@ class AirplaneTests(TestCase):
         cls.cache1_path = os.path.join(settings.BASE_DIR, cls.cache1)
         cls.cache2 = '.airplane_cache2'
         cls.cache2_path = os.path.join(settings.BASE_DIR, cls.cache2)
-        cls.url = 'http://foo.com'
-        cls.expected_filename = convert_url(cls.url)
-        cls.expected_url = '/static/' + cls.expected_filename
+        cls.url = 'http://foo.com/thing.css'
+        cls.expected_url = '/static/' + FakeUUID.hex + '.css'
+        cls.expected_filename = FakeUUID.hex + '.css'
 
     def tearDown(self):
         self._remove_local_caches()
@@ -70,13 +77,15 @@ class AirplaneTests(TestCase):
             expected_filename):
         # test with a mocked request that works
         with patch('requests.get') as mock_requests:
-            mock_requests.side_effect = fake_get
+            with patch('uuid.uuid4') as mock_uuid:
+                mock_requests.side_effect = fake_get
+                mock_uuid.return_value = FakeUUID
 
-            # render the tag
-            self._render(url, expected_url)
+                # render the tag
+                self._render(url, expected_url)
 
-            # check that the directory got a file
-            self.assertFile(dir_name, expected_filename)
+                # check that the directory got a file
+                self.assertFile(dir_name, expected_filename)
 
     def test_when_off(self):
         # test pass through, DEBUG=False, no AIRPLANE_MODE set
@@ -128,19 +137,35 @@ class AirplaneTests(TestCase):
             self._check_build_cache(self.url, self.expected_url, 
                 self.cache2_path, self.expected_filename)
 
+    def test_write_cache_map(self):
+        # test cache dir creation when calling write_cache_map
+        self._remove_local_caches()
+        write_cache_map()
+        self.assertTrue(os.path.exists(self.cache1_path))
+
+        # ensure it doesn't blow up with an empty map
+        old_value = airplane.utils.url_filename_map
+        airplane.utils.url_filename_map = None
+        write_cache_map()
+
+        airplane.utils.url_filename_map = old_value
+
+
     def test_auto_mode(self):
         with override_settings(
                 DEBUG=True,
                 AIRPLANE_MODE=airplane.AUTO_CACHE):
 
             with patch('requests.get') as mock_requests:
-                mock_requests.side_effect = fake_get
+                with patch('uuid.uuid4') as mock_uuid:
+                    mock_requests.side_effect = fake_get
+                    mock_uuid.return_value = FakeUUID
 
-                # render the tag, then do it again, request should only be
-                # called once (second time is through the cache)
-                self._render(self.url, self.expected_url)
-                self._render(self.url, self.expected_url)
-                self.assertEqual(len(mock_requests.call_args_list), 1)
+                    # render the tag, then do it again, request should only be
+                    # called once (second time is through the cache)
+                    self._render(self.url, self.expected_url)
+                    self._render(self.url, self.expected_url)
+                    self.assertEqual(len(mock_requests.call_args_list), 1)
 
     def test_schemaless(self):
         with override_settings(
@@ -148,17 +173,17 @@ class AirplaneTests(TestCase):
                 AIRPLANE_MODE=airplane.BUILD_CACHE):
 
             with patch('requests.get') as mock_requests:
-                mock_requests.side_effect = fake_get
+                with patch('uuid.uuid4') as mock_uuid:
+                    mock_requests.side_effect = fake_get
+                    mock_uuid.return_value = FakeUUID
 
-                # render the tag
-                url = '//foo.com'
-                expected_filename = convert_url(url)
-                expected_url = '/static/' + expected_filename
-                self._render(url, expected_url)
+                    # render the tag
+                    url = '//foo.com/thing.css'
+                    self._render(url, self.expected_url)
 
-                # verify requests was called with the inserted schema
-                mock_requests.assert_called_once_with('https:' + url,
-                    stream=True)
+                    # verify requests was called with the inserted schema
+                    mock_requests.assert_called_once_with('https:' + url,
+                        stream=True)
 
     def test_commands(self):
         # test aircache command
@@ -168,15 +193,17 @@ class AirplaneTests(TestCase):
                     AIRPLANE_CACHE=td):
 
                 with patch('requests.get') as mock_requests:
-                    mock_requests.side_effect = fake_get
+                    with patch('uuid.uuid4') as mock_uuid:
+                        mock_requests.side_effect = fake_get
+                        mock_uuid.return_value = FakeUUID
 
-                    url = 'http://foo.com/thing'
-                    call_command('aircache', url)
+                        url = 'http://foo.com/thing.css'
+                        call_command('aircache', url)
 
-                    filename = convert_url(url)
+                        filename = FakeUUID.hex + '.css'
 
-                    # check that the directory got a file
-                    self.assertTrue(os.path.exists(os.path.join(td, filename)))
+                        # check that the directory got a file
+                        self.assertFile(td, filename)
 
                 # run airinfo and make sure it doesn't blow up
                 with capture_stdout():
