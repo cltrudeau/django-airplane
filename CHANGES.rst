@@ -1,3 +1,8 @@
+0.3.1
+=====
+
+* fixing a merge conflict that got missed
+
 0.3
 ===
 
