@@ -7,7 +7,7 @@ from django.template import Context, Template
 from django.test import TestCase, override_settings
 
 import airplane
-from airplane.utils import write_cache_map
+from airplane.utils import write_cache_map, read_cache_map
 from context_temp import temp_directory
 from waelstow import capture_stdout
 
@@ -137,7 +137,7 @@ class AirplaneTests(TestCase):
             self._check_build_cache(self.url, self.expected_url, 
                 self.cache2_path, self.expected_filename)
 
-    def test_write_cache_map(self):
+    def test_read_write_cache_map(self):
         # test cache dir creation when calling write_cache_map
         self._remove_local_caches()
         write_cache_map()
@@ -148,8 +148,14 @@ class AirplaneTests(TestCase):
         airplane.utils.url_filename_map = None
         write_cache_map()
 
-        airplane.utils.url_filename_map = old_value
+        # ensure that read works from the file, reset the map to None to
+        # simulate first read
+        airplane.utils.url_filename_map = None
+        read_cache_map()
+        self.assertNotEqual(airplane.utils.url_filename_map, None)
 
+        # put the map back the way it was
+        airplane.utils.url_filename_map = old_value
 
     def test_auto_mode(self):
         with override_settings(
