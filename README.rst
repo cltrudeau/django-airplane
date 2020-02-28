@@ -141,6 +141,20 @@ As airplane is a template tag library, it doesn't have access to the request
 object at execution. In order to allow schemaless URLs, the code makes the
 assumption that the schema is "https" if it is not given in the URL.
 
+Limitations
+===========
+
+The intent of this library is to help you when you're using the Django
+debugging server and in a situation where you can't easily get to the network.
+Cached files are served using the django static server code, which means you
+are limited by what kinds of files it can serve. The static server makes
+guesses on the mimetype of the file based on file extensions. Airplane naively
+copies the extension of the file so the cached file has the same ending. This
+means URLs with weird extensions or those which static serve cannot guess at
+mimetype, will cause problems. It is not recommended to use django-airplane
+with files that don't end in typical extensions such as ".css", ".js", ".jpg",
+".png" or ".gif".
+
 
 Supports
 ========
