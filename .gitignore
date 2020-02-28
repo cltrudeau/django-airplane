@@ -24,4 +24,5 @@ build/
 dist/
 docs/_build/
 extras/sample_site/uploads/
+extras/sample_site/.airplane_cache/
 .tox/
