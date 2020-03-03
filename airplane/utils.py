@@ -48,6 +48,12 @@ def write_cache_map():
 # Cache Handling
 # =============================================================================
 
+def _create_path(filename):
+    ### patching Path is problematic, so wrapping the call to Path in a
+    # function so that can be patched during testing
+    return Path(get_cache_path()) / filename
+
+
 def cached_filename(url):
     """Returns the filename for the cached url"""
     global url_filename_map
@@ -60,12 +66,17 @@ def cached_filename(url):
         filename = urlquote_plus(url)
         filename = filename.replace('%', '|')
 
-    path = Path(get_cache_path()) / filename
-    if path.exists():
-        return filename
+    try:
+        path = _create_path(filename)
+        if path.exists():
+            return filename
+    except OSError:
+        # bad characters in the filename (old filename format on Windows, for
+        # example) will blow up Path, ignore to fall out to error handler
+        pass
 
-    # something has gone wrong, can't find the file
-    raise IOError('could not find file *%s* for url *%s*' % (filename, url))
+    # something has gone wrong, can't find the file, return 
+    return None
 
 
 def cache_url(url):
@@ -106,12 +117,7 @@ def cache_url(url):
 
 
 def cache_exists(url):
-    try:
-        cached_filename(url)
-    except IOError:
-        return False
-
-    return True
+    return cached_filename(url) is not None
 
 
 def cache_dict():

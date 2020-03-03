@@ -7,7 +7,7 @@ from django.template import Context, Template
 from django.test import TestCase, override_settings
 
 import airplane
-from airplane.utils import write_cache_map, read_cache_map
+from airplane.utils import write_cache_map, read_cache_map, cached_filename
 from context_temp import temp_directory
 from waelstow import capture_stdout
 
@@ -190,6 +190,14 @@ class AirplaneTests(TestCase):
                     # verify requests was called with the inserted schema
                     mock_requests.assert_called_once_with('https:' + url,
                         stream=True)
+
+    def test_bad_filename(self):
+        with patch('airplane.utils._create_path') as mock_create_path:
+            mock_create_path.side_effect = OSError()
+
+            result = cached_filename('$$$')
+            self.assertFalse(result)
+
 
     def test_commands(self):
         # test aircache command
