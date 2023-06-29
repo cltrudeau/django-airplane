@@ -1,7 +1,7 @@
 #!/bin/bash
 
 find . -name "*.pyc" -exec rm {} \;
-coverage run -p --source=airplane --omit="runtests.py" ./load_tests.py
+coverage run -p --source=airplane ./load_tests.py
 if [ "$?" = "0" ]; then
     coverage combine
     echo -e "\n\n================================================"
@@ -9,5 +9,5 @@ if [ "$?" = "0" ]; then
     coverage report
     echo -e "\nrun \"coverage html\" for full report"
     echo -e "\n"
-    ./pyflakes.sh 
+    ./pyflakes.sh
 fi

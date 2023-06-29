@@ -1,14 +1,22 @@
-# These requirements are for running tests and the sample_site, the library 
+# These requirements are for running tests and the sample_site, the library
 # itself only needs a subset, see setup.py for that list
-context-temp==0.11.1
-coverage==5.5
-Django==3.1.7
-django-awl==1.5.0
-pudb==2020.1
-pyflakes==2.3.0
-requests==2.25.1
-Sphinx==3.5.3
-sphinx-rtd-theme==0.5.1
-tox==3.23.0
-twine==3.4.1
-waelstow==0.10.2
+#
+# IMPORTANT!!!!
+#
+# Something funky happens when you upgrade to tox 4 with this project, it
+# installs the dependencies but then fails to load them when running the
+# tests. After trying to fix it for 3 hours and comparing differences to
+# other working projects, I have given up. Use tox<4!!!!
+#
+context-temp==0.11.2
+coverage==7.2.7
+Django==4.2.2
+django-awl==1.8.0
+pudb==2022.1.3
+pyflakes==3.0.1
+requests==2.31.0
+Sphinx==6.2.1
+sphinx-rtd-theme==1.2.2
+tox==3.28.0
+twine==4.0.2
+waelstow==0.11.1

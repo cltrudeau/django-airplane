@@ -1,3 +1,9 @@
+1.1.1
+=====
+
+* 2023/06/29
+* Changed test suite to Python 3.8-3.11, Django 4.1, 4.2 (old versions dropped)
+
 1.1
 ===
 

@@ -1,8 +1,8 @@
 from pathlib import Path
-import json, uuid 
+import json, uuid
 import requests
 
-from django.utils.http import urlquote_plus
+from urllib.parse import quote
 
 from airplane.pathing import get_cache_path
 
@@ -63,7 +63,7 @@ def cached_filename(url):
         filename = url_filename_map[url]
     except KeyError:
         # nothing in the cache_map file, try the old filename mapping method
-        filename = urlquote_plus(url)
+        filename = quote(url)
         filename = filename.replace('%', '|')
 
     try:
@@ -75,7 +75,7 @@ def cached_filename(url):
         # example) will blow up Path, ignore to fall out to error handler
         pass
 
-    # something has gone wrong, can't find the file, return 
+    # something has gone wrong, can't find the file, return
     return None
 
 

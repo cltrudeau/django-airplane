@@ -161,8 +161,11 @@ Supports
 
 django-airplane has been tested with:
 
-* Python 3.6, 3.7 and Django 2.2
-* Python 3.6, 3.7 and Django 3.0
+* Python 3.8-3.11 and Django 4.1
+* Python 3.8-3.11 and Django 4.2
+
+Older versions tested against Django 2.2 and 3.2, nothing has changed since
+then that should break, but these are no longer test targets
 
 Docs
 ====

@@ -58,6 +58,7 @@ def get_suite(labels=default_labels):
             }
         }],
         STATIC_URL='/static/',
+        DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField',
     )
 
     django.setup()
